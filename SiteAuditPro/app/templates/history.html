@@ -1,0 +1,152 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}Audit History - SiteAuditPro{% endblock %}
+{% block page_title %}Audit History{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header Card -->
+    <div class="glass-card rounded-2xl shadow-xl p-8 border border-gray-200/50 animate-fade-in">
+        <div>
+            <h2 class="text-3xl font-bold text-gray-900 mb-2">📊 Audit History</h2>
+            <p class="text-gray-600 text-lg">View all past website audits</p>
+        </div>
+    </div>
+
+    <!-- History Cards Grid -->
+    {% if audits %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for audit in audits %}
+        <div class="glass-card rounded-2xl shadow-lg p-6 border border-gray-200/50 hover:shadow-xl hover:scale-[1.02] transition-all duration-200">
+            <div class="flex justify-between items-start gap-4 mb-4">
+                <h3 class="text-base font-semibold text-gray-900 break-words flex-1">{{ audit.url }}</h3>
+                <span class="px-3 py-1 rounded-full text-xs font-semibold flex-shrink-0 {% if audit.status == 'completed' %}bg-green-100 text-green-700{% elif audit.status == 'processing' %}bg-yellow-100 text-yellow-700{% else %}bg-red-100 text-red-700{% endif %}">
+                    {% if audit.status %}{{ audit.status|title }}{% else %}Completed{% endif %}
+                </span>
+            </div>
+            
+            {% if audit.title %}
+            <div class="mb-4">
+                <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Title:</span>
+                <span class="text-sm text-gray-700 block mt-1">{{ audit.title }}</span>
+            </div>
+            {% endif %}
+            
+            <div class="mb-4 pb-4 border-b border-gray-200">
+                <span class="text-xs text-gray-500 font-medium audit-time" data-timestamp="{{ audit.timestamp.isoformat() }}">{{ audit.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</span>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-3 mb-4 p-4 bg-gray-50 rounded-lg">
+                {% if audit.score_seo is not none %}
+                <div class="flex flex-col">
+                    <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">SEO</span>
+                    <span class="px-2 py-1 rounded-full text-xs font-semibold inline-block w-fit {% if audit.score_seo >= 80 %}bg-green-100 text-green-700{% elif audit.score_seo >= 60 %}bg-yellow-100 text-yellow-700{% else %}bg-red-100 text-red-700{% endif %}">
+                        {{ audit.score_seo }}/100
+                    </span>
+                </div>
+                {% endif %}
+                
+                {% if audit.score_performance is not none %}
+                <div class="flex flex-col">
+                    <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Performance</span>
+                    <span class="px-2 py-1 rounded-full text-xs font-semibold inline-block w-fit {% if audit.score_performance >= 80 %}bg-green-100 text-green-700{% elif audit.score_performance >= 60 %}bg-yellow-100 text-yellow-700{% else %}bg-red-100 text-red-700{% endif %}">
+                        {{ audit.score_performance }}/100
+                    </span>
+                </div>
+                {% endif %}
+                
+                {% if audit.score_security is not none %}
+                <div class="flex flex-col">
+                    <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Security</span>
+                    <span class="px-2 py-1 rounded-full text-xs font-semibold inline-block w-fit {% if audit.score_security >= 80 %}bg-green-100 text-green-700{% elif audit.score_security >= 60 %}bg-yellow-100 text-yellow-700{% else %}bg-red-100 text-red-700{% endif %}">
+                        {{ audit.score_security }}/100
+                    </span>
+                </div>
+                {% endif %}
+                
+                {% if audit.broken_links is not none %}
+                <div class="flex flex-col">
+                    <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Broken Links</span>
+                    <span class="px-2 py-1 rounded-full text-xs font-semibold inline-block w-fit {% if audit.broken_links == 0 %}bg-green-100 text-green-700{% elif audit.broken_links <= 3 %}bg-yellow-100 text-yellow-700{% else %}bg-red-100 text-red-700{% endif %}">
+                        {{ audit.broken_links }}
+                    </span>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="mt-auto">
+                <a href="/analyze/{{ audit.id }}" class="w-full block text-center px-4 py-3 bg-white border-2 border-gray-200 text-gray-700 font-semibold rounded-xl hover:border-purple-500 hover:text-purple-700 hover:bg-purple-50 transition-all duration-200 hover:scale-105">
+                    View Report →
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="glass-card rounded-2xl shadow-xl p-12 border border-gray-200/50 text-center">
+        <div class="text-6xl mb-4">📊</div>
+        <h3 class="text-2xl font-bold text-gray-900 mb-2">No audit history yet</h3>
+        <p class="text-gray-600 mb-6">Get started by running your first website audit</p>
+        <a href="/overview" class="inline-block px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200">
+            Run Your First Audit
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+(function() {
+    function formatRelativeTime(timestamp) {
+        try {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diffMs = now - date;
+            const diffSec = Math.floor(diffMs / 1000);
+            const diffMin = Math.floor(diffSec / 60);
+            const diffHour = Math.floor(diffMin / 60);
+            const diffDay = Math.floor(diffHour / 24);
+            
+            if (diffSec < 60) {
+                return 'Just now';
+            } else if (diffMin < 60) {
+                return diffMin === 1 ? '1 minute ago' : diffMin + ' minutes ago';
+            } else if (diffHour < 24) {
+                return diffHour === 1 ? '1 hour ago' : diffHour + ' hours ago';
+            } else if (diffDay === 1) {
+                return 'Yesterday';
+            } else if (diffDay < 7) {
+                return diffDay + ' days ago';
+            } else if (diffDay < 30) {
+                const weeks = Math.floor(diffDay / 7);
+                return weeks === 1 ? '1 week ago' : weeks + ' weeks ago';
+            } else if (diffDay < 365) {
+                const months = Math.floor(diffDay / 30);
+                return months === 1 ? '1 month ago' : months + ' months ago';
+            } else {
+                const years = Math.floor(diffDay / 365);
+                return years === 1 ? '1 year ago' : years + ' years ago';
+            }
+        } catch (e) {
+            return timestamp;
+        }
+    }
+    
+    function updateTimestamps() {
+        const timeElements = document.querySelectorAll('.audit-time');
+        timeElements.forEach(function(el) {
+            const timestamp = el.getAttribute('data-timestamp');
+            if (timestamp) {
+                el.textContent = formatRelativeTime(timestamp);
+            }
+        });
+    }
+    
+    // Run on page load
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', updateTimestamps);
+    } else {
+        updateTimestamps();
+    }
+})();
+</script>
+{% endblock %}

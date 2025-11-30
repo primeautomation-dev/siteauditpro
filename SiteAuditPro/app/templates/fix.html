@@ -1,0 +1,164 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}AI Fix Suggestions - SiteAuditPro{% endblock %}
+{% block page_title %}AI Fix Suggestions{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header Card -->
+    <div class="glass-card rounded-2xl shadow-xl p-8 border border-gray-200/50 animate-fade-in">
+        <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
+            <div class="flex-1">
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">🤖 AI Fix Suggestions</h2>
+                <p class="text-gray-600 text-lg break-all">{{ url }}</p>
+            </div>
+            <a href="/analyze/{{ audit_id }}" class="px-6 py-3 bg-white border-2 border-gray-200 text-gray-700 font-semibold rounded-xl hover:border-purple-500 hover:text-purple-700 hover:bg-purple-50 transition-all duration-200 hover:scale-105">
+                ← Back to Report
+            </a>
+        </div>
+    </div>
+
+    <!-- Suggestions Container -->
+    <div class="space-y-6">
+        {% if suggestions and (suggestions.seo or suggestions.performance or suggestions.security or suggestions.metadata or suggestions.content or suggestions.schema or suggestions.general) %}
+        
+        <!-- SEO Suggestions -->
+        {% if suggestions.seo and suggestions.seo|length > 0 %}
+        <div class="glass-card rounded-2xl shadow-xl p-8 border border-gray-200/50 bg-gradient-to-br from-purple-50 to-blue-50 animate-fade-in hover:shadow-2xl transition-all duration-200">
+            <div class="flex justify-between items-center mb-6 pb-4 border-b-2 border-purple-200/50">
+                <h3 class="text-2xl font-bold text-gray-900">🔍 SEO Suggestions</h3>
+                <span class="px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full text-sm font-semibold text-purple-700">{{ suggestions.seo|length }} suggestions</span>
+            </div>
+            <div class="space-y-4">
+                {% for item in suggestions.seo %}
+                <div class="bg-white rounded-xl p-5 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-[1.01] border border-gray-200">
+                    <div class="text-sm font-semibold text-gray-900 mb-2"><strong class="text-purple-600">Issue:</strong> {{ item.issue if item.issue else "SEO Issue" }}</div>
+                    <div class="text-sm text-gray-700 leading-relaxed">
+                        {{ item.suggestion if item.suggestion else item.issue }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Performance Suggestions -->
+        {% if suggestions.performance and suggestions.performance|length > 0 %}
+        <div class="glass-card rounded-2xl shadow-xl p-8 border border-gray-200/50 bg-gradient-to-br from-blue-50 to-cyan-50 animate-fade-in hover:shadow-2xl transition-all duration-200">
+            <div class="flex justify-between items-center mb-6 pb-4 border-b-2 border-blue-200/50">
+                <h3 class="text-2xl font-bold text-gray-900">⚡ Performance Suggestions</h3>
+                <span class="px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full text-sm font-semibold text-blue-700">{{ suggestions.performance|length }} suggestions</span>
+            </div>
+            <div class="space-y-4">
+                {% for item in suggestions.performance %}
+                <div class="bg-white rounded-xl p-5 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-[1.01] border border-gray-200">
+                    <div class="text-sm font-semibold text-gray-900 mb-2"><strong class="text-blue-600">Issue:</strong> {{ item.issue if item.issue else "Performance Issue" }}</div>
+                    <div class="text-sm text-gray-700 leading-relaxed">{{ item.suggestion if item.suggestion else item.issue }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Security Suggestions -->
+        {% if suggestions.security and suggestions.security|length > 0 %}
+        <div class="glass-card rounded-2xl shadow-xl p-8 border border-gray-200/50 bg-gradient-to-br from-red-50 to-pink-50 animate-fade-in hover:shadow-2xl transition-all duration-200">
+            <div class="flex justify-between items-center mb-6 pb-4 border-b-2 border-red-200/50">
+                <h3 class="text-2xl font-bold text-gray-900">🔒 Security Suggestions</h3>
+                <span class="px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full text-sm font-semibold text-red-700">{{ suggestions.security|length }} suggestions</span>
+            </div>
+            <div class="space-y-4">
+                {% for item in suggestions.security %}
+                <div class="bg-white rounded-xl p-5 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-[1.01] border border-gray-200">
+                    <div class="text-sm font-semibold text-gray-900 mb-2"><strong class="text-red-600">Issue:</strong> {{ item.issue if item.issue else "Security Issue" }}</div>
+                    <div class="text-sm text-gray-700 leading-relaxed">{{ item.suggestion if item.suggestion else item.issue }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Metadata Suggestions -->
+        {% if suggestions.metadata and suggestions.metadata|length > 0 %}
+        <div class="glass-card rounded-2xl shadow-xl p-8 border border-gray-200/50 bg-gradient-to-br from-yellow-50 to-orange-50 animate-fade-in hover:shadow-2xl transition-all duration-200">
+            <div class="flex justify-between items-center mb-6 pb-4 border-b-2 border-yellow-200/50">
+                <h3 class="text-2xl font-bold text-gray-900">📋 Metadata Suggestions</h3>
+                <span class="px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full text-sm font-semibold text-yellow-700">{{ suggestions.metadata|length }} suggestions</span>
+            </div>
+            <div class="space-y-4">
+                {% for item in suggestions.metadata %}
+                <div class="bg-white rounded-xl p-5 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-[1.01] border border-gray-200">
+                    <div class="text-sm font-semibold text-gray-900 mb-2"><strong class="text-yellow-600">Issue:</strong> {{ item.issue if item.issue else "Metadata Issue" }}</div>
+                    <div class="text-sm text-gray-700 leading-relaxed">{{ item.suggestion if item.suggestion else item.issue }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Content Suggestions -->
+        {% if suggestions.content and suggestions.content|length > 0 %}
+        <div class="glass-card rounded-2xl shadow-xl p-8 border border-gray-200/50 bg-gradient-to-br from-green-50 to-emerald-50 animate-fade-in hover:shadow-2xl transition-all duration-200">
+            <div class="flex justify-between items-center mb-6 pb-4 border-b-2 border-green-200/50">
+                <h3 class="text-2xl font-bold text-gray-900">📝 Content Suggestions</h3>
+                <span class="px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full text-sm font-semibold text-green-700">{{ suggestions.content|length }} suggestions</span>
+            </div>
+            <div class="space-y-4">
+                {% for item in suggestions.content %}
+                <div class="bg-white rounded-xl p-5 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-[1.01] border border-gray-200">
+                    <div class="text-sm font-semibold text-gray-900 mb-2"><strong class="text-green-600">Issue:</strong> {{ item.issue if item.issue else "Content Issue" }}</div>
+                    <div class="text-sm text-gray-700 leading-relaxed">{{ item.suggestion if item.suggestion else item.issue }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Schema Suggestions -->
+        {% if suggestions.schema and suggestions.schema|length > 0 %}
+        <div class="glass-card rounded-2xl shadow-xl p-8 border border-gray-200/50 bg-gradient-to-br from-indigo-50 to-purple-50 animate-fade-in hover:shadow-2xl transition-all duration-200">
+            <div class="flex justify-between items-center mb-6 pb-4 border-b-2 border-indigo-200/50">
+                <h3 class="text-2xl font-bold text-gray-900">🏗️ Schema Suggestions</h3>
+                <span class="px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full text-sm font-semibold text-indigo-700">{{ suggestions.schema|length }} suggestions</span>
+            </div>
+            <div class="space-y-4">
+                {% for item in suggestions.schema %}
+                <div class="bg-white rounded-xl p-5 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-[1.01] border border-gray-200">
+                    <div class="text-sm font-semibold text-gray-900 mb-2"><strong class="text-indigo-600">Issue:</strong> {{ item.issue if item.issue else "Schema Issue" }}</div>
+                    <div class="text-sm text-gray-700 leading-relaxed">{{ item.suggestion if item.suggestion else item.issue }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- General Suggestions -->
+        {% if suggestions.general and suggestions.general|length > 0 %}
+        <div class="glass-card rounded-2xl shadow-xl p-8 border border-gray-200/50 bg-gradient-to-br from-gray-50 to-slate-50 animate-fade-in hover:shadow-2xl transition-all duration-200">
+            <div class="flex justify-between items-center mb-6 pb-4 border-b-2 border-gray-200/50">
+                <h3 class="text-2xl font-bold text-gray-900">💡 General Recommendations</h3>
+                <span class="px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full text-sm font-semibold text-gray-700">{{ suggestions.general|length }} suggestions</span>
+            </div>
+            <div class="space-y-4">
+                {% for item in suggestions.general %}
+                <div class="bg-white rounded-xl p-5 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-[1.01] border border-gray-200">
+                    <div class="text-sm font-semibold text-gray-900 mb-2"><strong class="text-gray-600">Issue:</strong> {{ item.issue if item.issue else "General Issue" }}</div>
+                    <div class="text-sm text-gray-700 leading-relaxed">{{ item.suggestion if item.suggestion else item.issue }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% else %}
+        <!-- No Suggestions Available -->
+        <div class="glass-card rounded-2xl shadow-xl p-12 border border-gray-200/50 text-center animate-fade-in">
+            <div class="text-6xl mb-4">🤖</div>
+            <h3 class="text-2xl font-bold text-gray-900 mb-2">No AI suggestions generated yet</h3>
+            <p class="text-gray-600">AI suggestions will be generated automatically when available.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+

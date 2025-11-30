@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="max-age=3600, must-revalidate" />
+    <title>{% block title %}SiteAuditPro – AI Website Auditor{% endblock %}</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', path='favicon.ico') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="/static/styles.css" rel="stylesheet">
+    <style>
+        @layer utilities {
+            .bg-gradient-brand {
+                background: linear-gradient(135deg, #9333ea 0%, #3b82f6 100%);
+            }
+            .bg-gradient-brand-hover {
+                background: linear-gradient(135deg, #7e22ce 0%, #2563eb 100%);
+            }
+            .glass-card {
+                background: rgba(255, 255, 255, 0.8);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+            }
+            .glass-sidebar {
+                background: rgba(255, 255, 255, 0.9);
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 via-white to-purple-50/30">
+    <div class="app-container flex min-h-screen">
+        {% if active_page != 'overview' %}
+        {% include "partials/sidebar.html" %}
+        {% endif %}
+
+        <div class="main-wrapper flex-1 flex flex-col {% if active_page != 'overview' %}ml-[280px]{% else %}ml-0{% endif %} transition-all duration-200">
+            {% if active_page != 'overview' %}
+            <!-- Top Header Bar -->
+            <header class="top-header sticky top-0 z-50 glass-card border-b border-gray-200/50 shadow-sm">
+                <div class="header-content max-w-[1400px] mx-auto px-6 py-4">
+                    <div class="header-left flex items-center gap-4">
+                        <h1 class="logo-text text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">SiteAuditPro</h1>
+                        <span class="header-divider text-gray-300">|</span>
+                        <h2 class="page-title text-base font-semibold text-gray-700">{% block page_title %}Dashboard{% endblock %}</h2>
+                    </div>
+                </div>
+            </header>
+            {% endif %}
+
+            <!-- Main Content Area -->
+            <main class="main-content flex-1 overflow-y-auto">
+                <div class="content-container {% if active_page != 'overview' %}max-w-[1400px] mx-auto px-6 py-8{% else %}w-full{% endif %}">
+                    {% block content %}{% endblock %}
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+</html>
+

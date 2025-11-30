@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+jinja2
+beautifulsoup4
+requests
+sqlmodel
+alembic
+openai
+weasyprint
+

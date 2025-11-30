@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SiteAuditPro – AI-Powered Website Audit Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 1rem 0 2rem;
+            min-height: auto;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #6c3df6 0%, #2575fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0 auto 0.75rem;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            text-align: center;
+            display: block;
+            width: 100%;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            font-weight: 400;
+            color: #6e6e73;
+            margin-bottom: 2rem;
+        }
+
+        .hero-form-wrapper {
+            background: white;
+            border-radius: 24px;
+            padding: 0.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            max-width: 700px;
+            margin: 0 auto;
+            transition: all 0.3s ease;
+        }
+
+        .hero-form-wrapper:focus-within {
+            box-shadow: 0 12px 48px rgba(108, 61, 246, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .hero-form {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .hero-input {
+            flex: 1;
+            padding: 1.25rem 1.5rem;
+            border: none;
+            background: transparent;
+            font-size: 1.0625rem;
+            color: #1d1d1f;
+            outline: none;
+        }
+
+        .hero-input::placeholder {
+            color: #86868b;
+        }
+
+        .hero-button {
+            padding: 1.25rem 2.5rem;
+            background: linear-gradient(135deg, #6c3df6 0%, #2575fc 100%);
+            color: white;
+            border: none;
+            border-radius: 18px;
+            font-size: 1.0625rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .hero-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(108, 61, 246, 0.3);
+        }
+
+        .hero-button:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .hero-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .hero-error {
+            background: #fee2e2;
+            border: 1px solid #fecaca;
+            border-radius: 16px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1.5rem;
+            color: #dc2626;
+            font-weight: 500;
+            font-size: 0.9375rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 2.5rem 0;
+            background: white;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 0;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+        }
+
+        .feature-card {
+            background: #f5f5f7;
+            border-radius: 20px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            max-width: 230px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
+            background: white;
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.01em;
+        }
+
+        .feature-desc {
+            font-size: 0.9375rem;
+            color: #6e6e73;
+            line-height: 1.5;
+        }
+
+        /* How It Works Section */
+        .how-it-works {
+            padding: 2.5rem 0;
+            background: #f5f5f7;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            color: #1d1d1f;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 0;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+        }
+
+        .step {
+            text-align: center;
+        }
+
+        .step-number {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #6c3df6 0%, #2575fc 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: white;
+            margin: 0 auto 1rem;
+            box-shadow: 0 8px 24px rgba(108, 61, 246, 0.25);
+        }
+
+        .step-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-desc {
+            font-size: 0.9375rem;
+            color: #6e6e73;
+            line-height: 1.5;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 1.5rem 0;
+            text-align: center;
+            background: white;
+            border-top: 1px solid #e5e5e7;
+        }
+
+        .footer-text {
+            font-size: 0.875rem;
+            color: #86868b;
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(245, 245, 247, 0.95);
+            backdrop-filter: blur(12px);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .overlay.show {
+            opacity: 1;
+        }
+
+        .overlay-card {
+            text-align: center;
+            padding: 3rem;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .spinner {
+            width: 64px;
+            height: 64px;
+            border: 4px solid rgba(108, 61, 246, 0.2);
+            border-top-color: #6c3df6;
+            border-radius: 50%;
+            animation: spin 1.5s linear infinite;
+            margin: 0 auto 1.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .overlay-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 0.5rem;
+        }
+
+        .overlay-subtitle {
+            font-size: 1rem;
+            color: #6e6e73;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .container {
+                padding: 0 1.5rem;
+            }
+
+            .hero-title {
+                font-size: 3.5rem;
+            }
+
+            .features-grid,
+            .steps {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+
+            .feature-card {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .hero {
+                min-height: auto;
+                padding: 2rem 0;
+            }
+
+            .hero-content {
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+                line-height: 1.2;
+            }
+
+            .hero-subtitle {
+                font-size: 1.125rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .hero-form-wrapper {
+                width: 100%;
+                max-width: 100%;
+                padding: 0.5rem;
+            }
+
+            .hero-form {
+                flex-direction: column;
+                gap: 0.75rem;
+                width: 100%;
+            }
+
+            .hero-input {
+                width: 100%;
+                padding: 1rem 1.25rem;
+                font-size: 1rem;
+            }
+
+            .hero-button {
+                width: 100%;
+                padding: 1rem 2rem;
+                font-size: 1rem;
+            }
+
+            .hero-error {
+                width: 100%;
+                max-width: 100%;
+                margin-left: 0;
+                margin-right: 0;
+            }
+
+            .features {
+                padding: 2rem 0;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+                max-width: 100%;
+            }
+
+            .feature-card {
+                max-width: 100%;
+                padding: 1.5rem 1.25rem;
+            }
+
+            .how-it-works {
+                padding: 2rem 0;
+            }
+
+            .section-title {
+                font-size: 1.75rem;
+                margin-bottom: 1.25rem;
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                max-width: 100%;
+            }
+
+            .step {
+                padding: 0 0.5rem;
+            }
+
+            .step-number {
+                width: 48px;
+                height: 48px;
+                font-size: 1.125rem;
+            }
+
+            .step-title {
+                font-size: 1.0625rem;
+            }
+
+            .step-desc {
+                font-size: 0.875rem;
+            }
+
+            .footer {
+                padding: 1.25rem 0;
+            }
+
+            .overlay-card {
+                padding: 2rem 1.5rem;
+                margin: 1rem;
+                max-width: calc(100% - 2rem);
+            }
+
+            .overlay-title {
+                font-size: 1.5rem;
+            }
+
+            .overlay-subtitle {
+                font-size: 0.9375rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .hero {
+                padding: 1.5rem 0;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .hero-form-wrapper {
+                padding: 0.5rem;
+                border-radius: 16px;
+            }
+
+            .hero-input {
+                padding: 0.875rem 1rem;
+                font-size: 0.9375rem;
+            }
+
+            .hero-button {
+                padding: 0.875rem 1.5rem;
+                font-size: 0.9375rem;
+            }
+
+            .features {
+                padding: 1.5rem 0;
+            }
+
+            .feature-card {
+                padding: 1.5rem 1rem;
+            }
+
+            .feature-icon {
+                font-size: 2rem;
+            }
+
+            .feature-title {
+                font-size: 1.125rem;
+            }
+
+            .feature-desc {
+                font-size: 0.875rem;
+            }
+
+            .how-it-works {
+                padding: 1.5rem 0;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .step-number {
+                width: 44px;
+                height: 44px;
+                font-size: 1rem;
+            }
+
+            .step-title {
+                font-size: 1rem;
+            }
+
+            .step-desc {
+                font-size: 0.8125rem;
+            }
+
+            .footer-text {
+                font-size: 0.8125rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 1.75rem;
+            }
+
+            .hero-subtitle {
+                font-size: 0.9375rem;
+            }
+
+            .section-title {
+                font-size: 1.375rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">SiteAuditPro</h1>
+                <p class="hero-subtitle">AI-Powered Website Audit Tool</p>
+                
+                <form method="POST" action="/analyze" class="hero-form-wrapper" id="audit-form">
+                    {% if error %}
+                    <div class="hero-error">
+                        <p>{{ error }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="hero-form">
+                        <input 
+                            type="text" 
+                            name="url" 
+                            id="url"
+                            required
+                            placeholder="Enter website URL..."
+                            class="hero-input"
+                        >
+                        <button type="submit" class="hero-button" id="submit-btn">
+                            Analyze
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3 class="feature-title">Fast Analysis</h3>
+                    <p class="feature-desc">
+                        Instant crawl with detailed SEO, performance and security scoring.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3 class="feature-title">AI Fix Suggestions</h3>
+                    <p class="feature-desc">
+                        Automatic meta tag rewrite, header fixes, schema tips and more.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3 class="feature-title">Security Scanner</h3>
+                    <p class="feature-desc">
+                        Detect missing headers and vulnerabilities instantly.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works">
+        <div class="container">
+            <h2 class="section-title">How It Works</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">Enter a Website URL</h3>
+                    <p class="step-desc">
+                        Simply paste your website URL into the input field above.
+                    </p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3 class="step-title">AI Crawls Your Website</h3>
+                    <p class="step-desc">
+                        Our AI-powered system analyzes your site's SEO, performance, and security.
+                    </p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3 class="step-title">Get an Instant Report</h3>
+                    <p class="step-desc">
+                        Receive a comprehensive report with actionable insights and AI-powered fix suggestions.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-text">© 2025 SiteAuditPro</p>
+        </div>
+    </footer>
+
+    <!-- Preparing Analysis Overlay -->
+    <div id="preparing-overlay" class="overlay">
+        <div class="overlay-card">
+            <div class="spinner"></div>
+            <h1 class="overlay-title">Preparing analysis…</h1>
+            <p class="overlay-subtitle" id="preparing-url"></p>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const form = document.getElementById('audit-form');
+            const mainContent = document.querySelector('body');
+            const preparingOverlay = document.getElementById('preparing-overlay');
+            const preparingUrl = document.getElementById('preparing-url');
+            const submitBtn = document.getElementById('submit-btn');
+            
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const urlInput = document.getElementById('url');
+                    const url = urlInput.value.trim();
+                    
+                    if (!url) {
+                        return;
+                    }
+                    
+                    // Disable submit button
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                    }
+                    
+                    // Step 1: Fade out main content (0.3s)
+                    if (mainContent) {
+                        mainContent.style.transition = 'opacity 0.3s ease-out';
+                        mainContent.style.opacity = '0';
+                    }
+                    
+                    // Step 2: Show preparing overlay after fade-out starts
+                    setTimeout(function() {
+                        if (preparingUrl) {
+                            preparingUrl.textContent = url;
+                        }
+                        if (preparingOverlay) {
+                            preparingOverlay.style.display = 'flex';
+                            // Trigger fade-in
+                            setTimeout(function() {
+                                preparingOverlay.classList.add('show');
+                            }, 10);
+                        }
+                    }, 300);
+                    
+                    // Step 3: Submit form after minimum 800ms delay
+                    setTimeout(function() {
+                        form.submit();
+                    }, 800);
+                });
+            }
+        })();
+    </script>
+</body>
+</html>

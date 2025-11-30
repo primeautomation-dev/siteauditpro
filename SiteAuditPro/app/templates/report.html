@@ -1,0 +1,390 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}Audit Report - SiteAuditPro{% endblock %}
+{% block page_title %}Audit Report{% endblock %}
+
+{% block content %}
+<div class="report-page space-y-6">
+    <!-- Report Header Card -->
+    <div class="glass-card rounded-2xl shadow-xl p-8 border border-gray-200/50 animate-fade-in">
+        <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-6 mb-8">
+            <div class="flex-1">
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">Audit Report</h2>
+                <p class="text-gray-600 text-lg break-all">{{ results.url }}</p>
+            </div>
+            <div class="flex gap-3">
+                <a href="/export-pdf/{{ results.audit_id }}" class="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-500 text-white font-semibold rounded-xl hover:from-purple-700 hover:to-blue-600 transition-all duration-200 hover:scale-105 shadow-lg">
+                    Download PDF
+                </a>
+                <a href="/overview" class="px-6 py-3 bg-white border-2 border-gray-200 text-gray-700 font-semibold rounded-xl hover:border-purple-500 hover:text-purple-700 hover:bg-purple-50 transition-all duration-200 hover:scale-105">
+                    ← New Audit
+                </a>
+            </div>
+        </div>
+        
+        <!-- Score Cards Row -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border border-green-200/50 shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-[1.02]">
+                <div class="flex flex-col">
+                    <span class="text-sm font-semibold text-gray-600 mb-2">SEO Score</span>
+                    <span class="text-4xl font-bold {% if results.score_seo >= 80 %}text-green-600{% elif results.score_seo >= 60 %}text-blue-600{% else %}text-red-600{% endif %}">
+                        {{ results.score_seo }}/100
+                    </span>
+                </div>
+            </div>
+            <div class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-6 border border-blue-200/50 shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-[1.02]">
+                <div class="flex flex-col">
+                    <span class="text-sm font-semibold text-gray-600 mb-2">Performance Score</span>
+                    <span class="text-4xl font-bold {% if results.score_performance >= 80 %}text-green-600{% elif results.score_performance >= 60 %}text-blue-600{% else %}text-red-600{% endif %}">
+                        {{ results.score_performance }}/100
+                    </span>
+                </div>
+            </div>
+            <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-6 border border-purple-200/50 shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-[1.02]">
+                <div class="flex flex-col">
+                    <span class="text-sm font-semibold text-gray-600 mb-2">Security Score</span>
+                    <span class="text-4xl font-bold {% if results.score_security >= 80 %}text-green-600{% elif results.score_security >= 60 %}text-blue-600{% else %}text-red-600{% endif %}">
+                        {{ results.score_security }}/100
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SEO Section -->
+    <section id="seo" class="glass-card rounded-2xl shadow-xl p-8 border border-gray-200/50 mb-8 sticky-section scroll-mt-24">
+        <div class="border-b-2 border-gray-200 pb-4 mb-6 sticky top-20 bg-white/80 backdrop-blur-sm -mx-8 px-8 -mt-8 pt-8">
+            <h3 class="text-2xl font-bold text-gray-900">🔍 SEO Analysis</h3>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-[1.02] hover:border-purple-300">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="text-sm font-semibold text-gray-700">Page Title</span>
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold {% if results.has_title %}bg-green-100 text-green-700{% else %}bg-red-100 text-red-700{% endif %}">
+                        {% if results.title_status %}{{ results.title_status }}{% else %}{% if results.has_title %}Present{% else %}Missing{% endif %}{% endif %}
+                    </span>
+                </div>
+                <p class="text-gray-900 font-medium mb-2">{{ results.title }}</p>
+                <p class="text-xs text-gray-500">Length: {{ results.title_length }} chars</p>
+            </div>
+
+            <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-[1.02] hover:border-purple-300">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="text-sm font-semibold text-gray-700">Meta Description</span>
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold {% if results.has_meta_description %}bg-green-100 text-green-700{% else %}bg-red-100 text-red-700{% endif %}">
+                        {% if results.meta_status %}{{ results.meta_status }}{% else %}{% if results.has_meta_description %}Present{% else %}Missing{% endif %}{% endif %}
+                    </span>
+                </div>
+                <p class="text-gray-900 font-medium mb-2">{{ results.meta_description }}</p>
+                <p class="text-xs text-gray-500">Length: {{ results.meta_length }} chars</p>
+            </div>
+
+            <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-[1.02] hover:border-purple-300">
+                <span class="text-sm font-semibold text-gray-700 block mb-4">Headings</span>
+                <div class="space-y-2">
+                    <p class="text-gray-900">H1: <strong class="text-purple-600">{{ results.h1_count }}</strong></p>
+                    <p class="text-gray-900">H2: <strong class="text-purple-600">{{ results.h2_count }}</strong></p>
+                    <p class="text-gray-900">H3: <strong class="text-purple-600">{{ results.h3_count }}</strong></p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-[1.02] hover:border-purple-300">
+                <span class="text-sm font-semibold text-gray-700 block mb-4">Image Alt Attributes</span>
+                <p class="text-3xl font-bold mb-2 {% if results.missing_alt == 0 %}text-green-600{% elif results.missing_alt <= 3 %}text-blue-600{% else %}text-red-600{% endif %}">
+                    {{ results.missing_alt }}
+                </p>
+                <p class="text-xs text-gray-500">Missing out of {{ results.img_count }} images</p>
+            </div>
+
+            <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-[1.02] hover:border-purple-300">
+                <div class="flex items-center justify-between">
+                    <span class="text-sm font-semibold text-gray-700">Canonical Tag</span>
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold {% if results.canonical_present %}bg-green-100 text-green-700{% else %}bg-red-100 text-red-700{% endif %}">
+                        {% if results.canonical_present %}Present{% else %}Missing{% endif %}
+                    </span>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-[1.02] hover:border-purple-300">
+                <div class="flex items-center justify-between">
+                    <span class="text-sm font-semibold text-gray-700">Robots Meta</span>
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold {% if results.robots_meta %}bg-green-100 text-green-700{% else %}bg-yellow-100 text-yellow-700{% endif %}">
+                        {% if results.robots_meta %}Present{% else %}Not Set{% endif %}
+                    </span>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-[1.02] hover:border-purple-300">
+                <div class="flex items-center justify-between">
+                    <span class="text-sm font-semibold text-gray-700">Sitemap.xml</span>
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold {% if results.sitemap_available %}bg-green-100 text-green-700{% else %}bg-red-100 text-red-700{% endif %}">
+                        {% if results.sitemap_available %}Available{% else %}Not Found{% endif %}
+                    </span>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-[1.02] hover:border-purple-300">
+                <div class="flex items-center justify-between">
+                    <span class="text-sm font-semibold text-gray-700">Robots.txt</span>
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold {% if results.robots_available %}bg-green-100 text-green-700{% else %}bg-red-100 text-red-700{% endif %}">
+                        {% if results.robots_available %}Available{% else %}Not Found{% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Performance Section -->
+    <section id="performance" class="glass-card rounded-2xl shadow-xl p-8 border border-gray-200/50 mb-8 sticky-section scroll-mt-24">
+        <div class="border-b-2 border-gray-200 pb-4 mb-6 sticky top-20 bg-white/80 backdrop-blur-sm -mx-8 px-8 -mt-8 pt-8">
+            <h3 class="text-2xl font-bold text-gray-900">⚡ Performance Analysis</h3>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-[1.02] hover:border-purple-300">
+                <span class="text-sm font-semibold text-gray-700 block mb-4">Total Page Size</span>
+                <p class="text-3xl font-bold text-blue-600">{{ results.page_size_kb|round(1) }} KB</p>
+            </div>
+            <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-[1.02] hover:border-purple-300">
+                <span class="text-sm font-semibold text-gray-700 block mb-4">JavaScript Files</span>
+                <p class="text-3xl font-bold text-blue-600 mb-2">{{ results.js_count }}</p>
+                <p class="text-xs text-gray-500">Total: {{ results.js_size_kb|round(1) }} KB</p>
+            </div>
+            <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-[1.02] hover:border-purple-300">
+                <span class="text-sm font-semibold text-gray-700 block mb-4">CSS Files</span>
+                <p class="text-3xl font-bold text-blue-600 mb-2">{{ results.css_count }}</p>
+                <p class="text-xs text-gray-500">Total: {{ results.css_size_kb|round(1) }} KB</p>
+            </div>
+            <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-[1.02] hover:border-purple-300">
+                <span class="text-sm font-semibold text-gray-700 block mb-4">Largest Image</span>
+                <p class="text-3xl font-bold {% if results.largest_image_kb > 300 %}text-red-600{% elif results.largest_image_kb > 200 %}text-blue-600{% else %}text-green-600{% endif %}">
+                    {{ results.largest_image_kb|round(1) }} KB
+                </p>
+            </div>
+            <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-[1.02] hover:border-purple-300">
+                <span class="text-sm font-semibold text-gray-700 block mb-4">External Scripts (CDN)</span>
+                <p class="text-3xl font-bold text-blue-600">{{ results.external_scripts }}</p>
+            </div>
+            <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-[1.02] hover:border-purple-300">
+                <span class="text-sm font-semibold text-gray-700 block mb-4">LCP Element</span>
+                <p class="text-gray-900 font-medium">{{ results.basic_lcp_element }}</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Security Section -->
+    <section id="security" class="glass-card rounded-2xl shadow-xl p-8 border border-gray-200/50 mb-8 sticky-section scroll-mt-24">
+        <div class="border-b-2 border-gray-200 pb-4 mb-6 sticky top-20 bg-white/80 backdrop-blur-sm -mx-8 px-8 -mt-8 pt-8">
+            <h3 class="text-2xl font-bold text-gray-900">🔒 Security Headers</h3>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for header, present in results.security_headers.items() %}
+            <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-[1.02] hover:border-purple-300">
+                <div class="flex items-center justify-between">
+                    <span class="text-sm font-semibold text-gray-700">{{ header }}</span>
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold {% if present %}bg-green-100 text-green-700{% else %}bg-red-100 text-red-700{% endif %}">
+                        {% if present %}Present{% else %}Missing{% endif %}
+                    </span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Links Section -->
+    <section id="links" class="glass-card rounded-2xl shadow-xl p-8 border border-gray-200/50 mb-8 sticky-section scroll-mt-24">
+        <div class="border-b-2 border-gray-200 pb-4 mb-6 sticky top-20 bg-white/80 backdrop-blur-sm -mx-8 px-8 -mt-8 pt-8">
+            <h3 class="text-2xl font-bold text-gray-900">🔗 Link Analysis</h3>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-[1.02] hover:border-purple-300">
+                <span class="text-sm font-semibold text-gray-700 block mb-4">Working Links</span>
+                <p class="text-3xl font-bold text-green-600">{{ results.working_links }}</p>
+            </div>
+            <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-[1.02] hover:border-purple-300">
+                <span class="text-sm font-semibold text-gray-700 block mb-4">Broken Links</span>
+                <p class="text-3xl font-bold {% if results.broken_links == 0 %}text-green-600{% elif results.broken_links <= 3 %}text-blue-600{% else %}text-red-600{% endif %}">
+                    {{ results.broken_links }}
+                </p>
+            </div>
+            <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-[1.02] hover:border-purple-300">
+                <span class="text-sm font-semibold text-gray-700 block mb-4">Internal Links</span>
+                <p class="text-3xl font-bold text-blue-600">{{ results.internal_links }}</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Fix Suggestions Section -->
+    {% if results.suggestions is defined and results.suggestions %}
+    <section id="ai-suggestions" class="glass-card rounded-2xl shadow-xl p-8 border border-gray-200/50 mb-8 sticky-section scroll-mt-24">
+        <div class="border-b-2 border-gray-200 pb-4 mb-6 sticky top-20 bg-white/80 backdrop-blur-sm -mx-8 px-8 -mt-8 pt-8">
+            <div class="flex justify-between items-center">
+                <h3 class="text-2xl font-bold text-gray-900">🤖 AI Fix Suggestions</h3>
+                <a href="/fix/{{ results.audit_id }}" class="px-4 py-2 bg-white border-2 border-gray-200 text-gray-700 font-semibold rounded-xl hover:border-purple-500 hover:text-purple-700 hover:bg-purple-50 transition-all duration-200 text-sm">
+                    Open Fix Suggestions →
+                </a>
+            </div>
+        </div>
+        <div class="space-y-6">
+            {% if results.suggestions.seo and results.suggestions.seo|length > 0 %}
+            <div class="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl p-6 border border-purple-200/50">
+                <h4 class="text-lg font-bold text-gray-900 mb-4">SEO Suggestions</h4>
+                <div class="space-y-3">
+                    {% for item in results.suggestions.seo %}
+                    <div class="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-200 hover:scale-[1.01] border border-gray-200">
+                        <div class="text-sm font-semibold text-gray-900 mb-2"><strong class="text-purple-600">Issue:</strong> {{ item.issue if item.issue else item.suggestion }}</div>
+                        <div class="text-sm text-gray-700">{{ item.suggestion if item.suggestion else item.issue }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if results.suggestions.performance and results.suggestions.performance|length > 0 %}
+            <div class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-6 border border-blue-200/50">
+                <h4 class="text-lg font-bold text-gray-900 mb-4">Performance Suggestions</h4>
+                <div class="space-y-3">
+                    {% for item in results.suggestions.performance %}
+                    <div class="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-200 hover:scale-[1.01] border border-gray-200">
+                        <div class="text-sm font-semibold text-gray-900 mb-2"><strong class="text-blue-600">Issue:</strong> {{ item.issue if item.issue else item.suggestion }}</div>
+                        <div class="text-sm text-gray-700">{{ item.suggestion if item.suggestion else item.issue }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if results.suggestions.security and results.suggestions.security|length > 0 %}
+            <div class="bg-gradient-to-br from-red-50 to-pink-50 rounded-xl p-6 border border-red-200/50">
+                <h4 class="text-lg font-bold text-gray-900 mb-4">Security Suggestions</h4>
+                <div class="space-y-3">
+                    {% for item in results.suggestions.security %}
+                    <div class="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-200 hover:scale-[1.01] border border-gray-200">
+                        <div class="text-sm font-semibold text-gray-900 mb-2"><strong class="text-red-600">Issue:</strong> {{ item.issue if item.issue else item.suggestion }}</div>
+                        <div class="text-sm text-gray-700">{{ item.suggestion if item.suggestion else item.issue }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if results.suggestions.metadata and results.suggestions.metadata|length > 0 %}
+            <div class="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-xl p-6 border border-yellow-200/50">
+                <h4 class="text-lg font-bold text-gray-900 mb-4">Metadata Suggestions</h4>
+                <div class="space-y-3">
+                    {% for item in results.suggestions.metadata %}
+                    <div class="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-200 hover:scale-[1.01] border border-gray-200">
+                        <div class="text-sm font-semibold text-gray-900 mb-2"><strong class="text-yellow-600">Issue:</strong> {{ item.issue if item.issue else item.suggestion }}</div>
+                        <div class="text-sm text-gray-700">{{ item.suggestion if item.suggestion else item.issue }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if results.suggestions.content and results.suggestions.content|length > 0 %}
+            <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border border-green-200/50">
+                <h4 class="text-lg font-bold text-gray-900 mb-4">Content Suggestions</h4>
+                <div class="space-y-3">
+                    {% for item in results.suggestions.content %}
+                    <div class="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-200 hover:scale-[1.01] border border-gray-200">
+                        <div class="text-sm font-semibold text-gray-900 mb-2"><strong class="text-green-600">Issue:</strong> {{ item.issue if item.issue else item.suggestion }}</div>
+                        <div class="text-sm text-gray-700">{{ item.suggestion if item.suggestion else item.issue }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if results.suggestions.schema and results.suggestions.schema|length > 0 %}
+            <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl p-6 border border-indigo-200/50">
+                <h4 class="text-lg font-bold text-gray-900 mb-4">Schema Suggestions</h4>
+                <div class="space-y-3">
+                    {% for item in results.suggestions.schema %}
+                    <div class="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-200 hover:scale-[1.01] border border-gray-200">
+                        <div class="text-sm font-semibold text-gray-900 mb-2"><strong class="text-indigo-600">Issue:</strong> {{ item.issue if item.issue else item.suggestion }}</div>
+                        <div class="text-sm text-gray-700">{{ item.suggestion if item.suggestion else item.issue }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if results.suggestions.general and results.suggestions.general|length > 0 %}
+            <div class="bg-gradient-to-br from-gray-50 to-slate-50 rounded-xl p-6 border border-gray-200/50">
+                <h4 class="text-lg font-bold text-gray-900 mb-4">General Recommendations</h4>
+                <div class="space-y-3">
+                    {% for item in results.suggestions.general %}
+                    <div class="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-200 hover:scale-[1.01] border border-gray-200">
+                        <div class="text-sm font-semibold text-gray-900 mb-2"><strong class="text-gray-600">Issue:</strong> {{ item.issue if item.issue else item.suggestion }}</div>
+                        <div class="text-sm text-gray-700">{{ item.suggestion if item.suggestion else item.issue }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if not (results.suggestions.seo or results.suggestions.performance or results.suggestions.security or results.suggestions.metadata or results.suggestions.content or results.suggestions.schema or results.suggestions.general) %}
+            <div class="text-center py-12">
+                <p class="text-gray-500">No AI suggestions available yet.</p>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+    {% endif %}
+</div>
+
+<style>
+.ai-suggestions-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.suggestion-category {
+    background: #f9fafb;
+    border-radius: 8px;
+    padding: 1.25rem;
+    border: 1px solid #e5e7eb;
+}
+
+.suggestion-category-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.suggestion-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.suggestion-card {
+    background: #ffffff;
+    border-radius: 6px;
+    padding: 1rem;
+    border-left: 3px solid #3b82f6;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.suggestion-issue {
+    color: #6b7280;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.suggestion-text {
+    color: #1f2937;
+    line-height: 1.6;
+}
+
+.suggestion-empty {
+    text-align: center;
+    padding: 2rem;
+    color: #6b7280;
+}
+</style>
+{% endblock %}

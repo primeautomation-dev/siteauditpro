@@ -1,0 +1,143 @@
+{% extends "layout.html" %}
+
+{% block title %}SiteAuditPro – AI Website Auditor{% endblock %}
+
+{% block content %}
+<!-- Premium Landing Page -->
+<div class="landing-page">
+    <!-- Top Logo Header -->
+    <header class="landing-header">
+        <div class="landing-header-content">
+            <h1 class="landing-logo">SiteAuditPro</h1>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="landing-hero">
+        <div class="landing-hero-container">
+            <div class="landing-hero-card">
+                <h1 class="landing-hero-title">Analyze Any Website Instantly</h1>
+                <p class="landing-hero-subtitle">Get SEO, performance and security insights powered by AI Fix Suggestions.</p>
+                
+                <form method="POST" action="/analyze" class="landing-hero-form" id="audit-form">
+                    {% if error %}
+                    <div class="landing-error">
+                        <p>{{ error }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="landing-input-group">
+                        <input 
+                            type="text" 
+                            name="url" 
+                            id="url"
+                            required
+                            placeholder="https://www.example.com"
+                            class="landing-input"
+                        >
+                        <button type="submit" class="landing-button" id="submit-btn">
+                            Analyze
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="landing-features">
+        <div class="landing-features-container">
+            <!-- Card 1 -->
+            <div class="landing-feature-card">
+                <div class="landing-feature-icon">⚡</div>
+                <h3 class="landing-feature-title">Fast Analysis</h3>
+                <p class="landing-feature-desc">
+                    Instant crawl with detailed SEO, performance and security scoring.
+                </p>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="landing-feature-card">
+                <div class="landing-feature-icon">🤖</div>
+                <h3 class="landing-feature-title">AI Fix Suggestions</h3>
+                <p class="landing-feature-desc">
+                    Automatic meta tag rewrite, header fixes, schema tips and more.
+                </p>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="landing-feature-card">
+                <div class="landing-feature-icon">🔒</div>
+                <h3 class="landing-feature-title">Security Scanner</h3>
+                <p class="landing-feature-desc">
+                    Detect missing headers and vulnerabilities instantly.
+                </p>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Preparing Analysis Overlay -->
+<div id="preparing-overlay" class="preparing-overlay" style="display: none;">
+    <div class="preparing-card">
+        <div class="preparing-spinner"></div>
+        <h1 class="preparing-title">Preparing analysis…</h1>
+        <p class="preparing-subtitle" id="preparing-url"></p>
+    </div>
+</div>
+
+<script>
+(function() {
+    const form = document.getElementById('audit-form');
+    const mainContent = document.querySelector('.landing-page');
+    const preparingOverlay = document.getElementById('preparing-overlay');
+    const preparingUrl = document.getElementById('preparing-url');
+    const submitBtn = document.getElementById('submit-btn');
+    
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const urlInput = document.getElementById('url');
+            const url = urlInput.value.trim();
+            
+            if (!url) {
+                return;
+            }
+            
+            // Disable submit button
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.style.opacity = '0.6';
+                submitBtn.style.cursor = 'not-allowed';
+            }
+            
+            // Step 1: Fade out main content (0.3s)
+            if (mainContent) {
+                mainContent.style.transition = 'opacity 0.3s ease-out';
+                mainContent.style.opacity = '0';
+            }
+            
+            // Step 2: Show preparing overlay after fade-out starts
+            setTimeout(function() {
+                if (preparingUrl) {
+                    preparingUrl.textContent = url;
+                }
+                if (preparingOverlay) {
+                    preparingOverlay.style.display = 'flex';
+                    // Trigger fade-in
+                    setTimeout(function() {
+                        preparingOverlay.style.opacity = '1';
+                    }, 10);
+                }
+            }, 300);
+            
+            // Step 3: Submit form after minimum 800ms delay
+            setTimeout(function() {
+                form.submit();
+            }, 800);
+        });
+    }
+})();
+</script>
+{% endblock %}

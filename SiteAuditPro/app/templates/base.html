@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SiteAuditPro{% endblock %}</title>
+    <link href="/static/styles.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        {% include "partials/sidebar.html" %}
+
+        <div class="main-wrapper">
+            <!-- Top Header Bar -->
+            <header class="top-header">
+                <div class="header-content">
+                    <div class="header-left">
+                        <h1 class="logo-text">SiteAuditPro</h1>
+                        <span class="header-divider">|</span>
+                        <h2 class="page-title">{% block page_title %}Dashboard{% endblock %}</h2>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content Area -->
+            <main class="main-content">
+                <div class="content-container">
+                    {% block content %}{% endblock %}
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+</html>

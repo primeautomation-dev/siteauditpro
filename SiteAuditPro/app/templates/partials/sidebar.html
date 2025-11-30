@@ -1,0 +1,140 @@
+<aside class="sidebar fixed left-0 top-0 w-[280px] h-screen glass-sidebar border-r border-gray-200/50 z-40 flex flex-col overflow-y-auto">
+    <div class="sidebar-header p-6 border-b border-gray-200/50">
+        <div class="sidebar-logo text-lg font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">SiteAuditPro</div>
+    </div>
+    <nav class="sidebar-nav flex-1 p-4 flex flex-col gap-1">
+        {% if audit_id is defined and audit_id %}
+        {# User has analyzed a website - Overview goes to analyze page #}
+        <a href="/analyze/{{ audit_id }}" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 transition-all duration-200 hover:bg-gray-50 hover:scale-[1.02] {% if active_page == 'overview' or active_page == 'analyze' %}bg-gradient-to-r from-purple-50 to-blue-50 border-l-4 border-purple-600 text-purple-700 font-semibold{% endif %}">
+            <span class="nav-icon text-lg">🏠</span>
+            <span class="nav-label">Overview</span>
+        </a>
+        {# Check if we're on analyze page - use anchor links, otherwise full URLs #}
+        {% if active_page == 'analyze' %}
+        {# On analyze page - use anchor links for instant scrolling #}
+        <a href="#seo" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 transition-all duration-200 hover:bg-gray-50 hover:scale-[1.02] scroll-nav-item" data-section="seo">
+            <span class="nav-icon text-lg">🔍</span>
+            <span class="nav-label">SEO</span>
+        </a>
+        <a href="#performance" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 transition-all duration-200 hover:bg-gray-50 hover:scale-[1.02] scroll-nav-item" data-section="performance">
+            <span class="nav-icon text-lg">⚡</span>
+            <span class="nav-label">Performance</span>
+        </a>
+        <a href="#security" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 transition-all duration-200 hover:bg-gray-50 hover:scale-[1.02] scroll-nav-item" data-section="security">
+            <span class="nav-icon text-lg">🔒</span>
+            <span class="nav-label">Security</span>
+        </a>
+        <a href="#links" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 transition-all duration-200 hover:bg-gray-50 hover:scale-[1.02] scroll-nav-item" data-section="links">
+            <span class="nav-icon text-lg">🔗</span>
+            <span class="nav-label">Links</span>
+        </a>
+        {% else %}
+        {# Not on analyze page (e.g., on history) - use full URLs #}
+        <a href="/analyze/{{ audit_id }}#seo" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 transition-all duration-200 hover:bg-gray-50 hover:scale-[1.02]">
+            <span class="nav-icon text-lg">🔍</span>
+            <span class="nav-label">SEO</span>
+        </a>
+        <a href="/analyze/{{ audit_id }}#performance" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 transition-all duration-200 hover:bg-gray-50 hover:scale-[1.02]">
+            <span class="nav-icon text-lg">⚡</span>
+            <span class="nav-label">Performance</span>
+        </a>
+        <a href="/analyze/{{ audit_id }}#security" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 transition-all duration-200 hover:bg-gray-50 hover:scale-[1.02]">
+            <span class="nav-icon text-lg">🔒</span>
+            <span class="nav-label">Security</span>
+        </a>
+        <a href="/analyze/{{ audit_id }}#links" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 transition-all duration-200 hover:bg-gray-50 hover:scale-[1.02]">
+            <span class="nav-icon text-lg">🔗</span>
+            <span class="nav-label">Links</span>
+        </a>
+        {% endif %}
+        {% if audit_id is defined and audit_id %}
+        <a href="/fix/{{ audit_id }}" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 transition-all duration-200 hover:bg-gray-50 hover:scale-[1.02] {% if active_page == 'fix' %}bg-gradient-to-r from-purple-50 to-blue-50 border-l-4 border-purple-600 text-purple-700 font-semibold{% endif %}">
+            <span class="nav-icon text-lg">🧠</span>
+            <span class="nav-label">Fix Suggestions</span>
+        </a>
+        {% endif %}
+        {% else %}
+        {# No audit exists - only show Overview #}
+        <a href="/overview" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 transition-all duration-200 hover:bg-gray-50 hover:scale-[1.02] {% if active_page == 'overview' %}bg-gradient-to-r from-purple-50 to-blue-50 border-l-4 border-purple-600 text-purple-700 font-semibold{% endif %}">
+            <span class="nav-icon text-lg">🏠</span>
+            <span class="nav-label">Overview</span>
+        </a>
+        {% endif %}
+        <a href="/history" class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-700 transition-all duration-200 hover:bg-gray-50 hover:scale-[1.02] {% if active_page == 'history' %}bg-gradient-to-r from-purple-50 to-blue-50 border-l-4 border-purple-600 text-purple-700 font-semibold{% endif %}">
+            <span class="nav-icon text-lg">📊</span>
+            <span class="nav-label">History</span>
+        </a>
+    </nav>
+</aside>
+
+<script>
+// Frontend-only navigation - scroll to sections on same page
+// No backend calls, instant navigation
+(function() {
+    function updateActiveNav() {
+        const hash = window.location.hash.substring(1) || '';
+        document.querySelectorAll('.scroll-nav-item').forEach(function(item) {
+            const section = item.getAttribute('data-section');
+            if (section === hash) {
+                item.classList.add('bg-gradient-to-r', 'from-purple-50', 'to-blue-50', 'border-l-4', 'border-purple-600', 'text-purple-700', 'font-semibold');
+                item.classList.remove('text-gray-700', 'font-medium');
+            } else {
+                item.classList.remove('bg-gradient-to-r', 'from-purple-50', 'to-blue-50', 'border-l-4', 'border-purple-600', 'text-purple-700', 'font-semibold');
+                item.classList.add('text-gray-700', 'font-medium');
+            }
+        });
+    }
+    
+    function scrollToSection(sectionId) {
+        const element = document.getElementById(sectionId);
+        if (element) {
+            const headerOffset = 100;
+            const elementPosition = element.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+            window.scrollTo({
+                top: Math.max(0, offsetPosition),
+                behavior: 'smooth'
+            });
+            history.pushState(null, null, '#' + sectionId);
+            updateActiveNav();
+        }
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        // Only run scroll navigation if we're on the analyze page
+        if (window.location.pathname.startsWith('/analyze/')) {
+            // Handle anchor link clicks
+            document.querySelectorAll('.scroll-nav-item').forEach(function(item) {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const section = this.getAttribute('data-section');
+                    scrollToSection(section);
+                });
+            });
+            
+            // Handle initial hash or scroll to top
+            const hash = window.location.hash.substring(1);
+            if (hash) {
+                setTimeout(function() {
+                    scrollToSection(hash);
+                }, 100);
+            } else {
+                // No hash - scroll to top and update nav
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                updateActiveNav();
+            }
+        }
+    });
+    
+    // Update active nav on hash change (only on analyze page)
+    window.addEventListener('hashchange', function() {
+        if (window.location.pathname.startsWith('/analyze/')) {
+            updateActiveNav();
+            const hash = window.location.hash.substring(1);
+            if (hash) {
+                scrollToSection(hash);
+            }
+        }
+    });
+})();
+</script>
